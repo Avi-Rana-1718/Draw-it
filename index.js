@@ -58,6 +58,7 @@ app.get("/joinRoom/:id/:name", (req, res)=>{
                 id: nData[0].id,
                 members: [...nData[0].members, name],
                 userID: name,
+                roomAdmin: nData[0].roomAdmin,
                 drawData: nData[0].drawData
             }
     
@@ -79,6 +80,7 @@ app.get("/joinRoom/:id/:name", (req, res)=>{
                 id: nData[0].id,
                 members: [...nData[0].members],
                 userID: name,
+                roomAdmin: nData[0].roomAdmin,
                 drawData: nData[0].drawData
             })
             

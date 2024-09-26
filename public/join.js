@@ -6,7 +6,7 @@ let params = new URLSearchParams(window.location.search);
 console.log(params.get("id"));
 
 let userID;
-let drawColor="pink"
+let drawColor;
 
 fetch("/joinRoom/" + params.get("id") + "/" + params.get("name")).then(res=>res.json()).then(data=>{
     console.log(data);
@@ -14,9 +14,35 @@ fetch("/joinRoom/" + params.get("id") + "/" + params.get("name")).then(res=>res.
     userID=data.userID;
     roomCred.innerHTML=`<h5>Room ID: ${data.id} </h5>`;
     roomCred.innerHTML+=`<span>Member joined: ${data.members.length}</span><br />`;
-    roomCred.innerHTML+=`<span>User ID: ${data.userID}</span>`
-   } else {
+    
+    roomCred.innerHTML+=(data.userID!=data.roomAdmin)?`<span>User ID: ${data.userID}</span>`:`<span>User ID: ${data.userID}</span> (You are the room admin!)`;  
+    } else {
     roomCred.innerHTML=data.error;
+    return;
+   }
+
+   switch(data.members.indexOf(data.userID) + 1) {
+    case 1:
+        drawColor="red";
+        break;
+    case 2:
+        drawColor="orange";
+        break;
+    case 3:
+        drawColor="yellow";
+        break;
+    case 4:
+        drawColor="green";
+        break;
+    case 5:
+        drawColor="blue";
+        break;
+    case 6:
+        drawColor="indigo";
+        break;
+    case 7:
+        drawColor="violet";
+        break;
    }
 
    canvas.width=500;
