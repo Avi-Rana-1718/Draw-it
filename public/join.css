@@ -17,3 +17,12 @@ main ul {
 #roomCred {
     text-align: left;
 }
+
+@media screen and (max-width:800px) {
+    main {
+        display: block;
+    }
+    canvas {
+        margin: 4px 0px;
+    }
+}
