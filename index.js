@@ -34,7 +34,22 @@ app.get("/createRoom", (req, res)=>{
 })
 
 io.on("connection", (socket)=>{
+
+    // userName is the name of the one requ
+    socket.on("init", (roomID, userName)=>{
+        io.emit(`getData/${roomID}`);
+        socket.on(`sendData`, (roomID, data, senderID)=>{ 
+            console.log(senderID, userName);
+            
+            
+            //if(senderID!=userName)
+            io.emit(`completeInit/${roomID}/${userName}`, data);
+        })
+    
+    })
+
     socket.on("join", (roomID, userName)=>{
+
         let data = JSON.parse(fs.readFileSync("./data.json"));
         let flag=true;
         data = data.map((el)=>{
