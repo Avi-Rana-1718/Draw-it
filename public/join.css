@@ -1,6 +1,5 @@
 canvas {
     border: 1px solid black;
-    margin: 4px 10px;
 }
 main {
     display: flex;
@@ -17,12 +16,17 @@ main ul {
 #roomCred {
     text-align: left;
 }
+#canvasArea {
+    display: flex;
+    flex-direction: column;
+    margin: 4px 10px;
+}
 
 @media screen and (max-width:800px) {
     main {
         display: block;
     }
-    canvas {
+    #canvasArea {
         margin: 4px 0px;
     }
 }

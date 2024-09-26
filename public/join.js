@@ -3,6 +3,7 @@ let ctx = canvas.getContext("2d");
 
 let roomCred = document.querySelector("#roomCred");
 let memberList = document.querySelector("#memberList");
+let destoryBtn = document.querySelector("#destroyBtn");
 
 let params = new URLSearchParams(window.location.search);
 
@@ -45,7 +46,12 @@ socket.on(`join/${params.get("id")}`, (data)=>{
             let li = document.createElement("li");
             li.innerHTML = el + ` <span class="colorCircle" style="background-color: ${getColor(index + 1)}">${getColor(index + 1)}</span>`;
             memberList.appendChild(li)
-        })
+        });
+
+        if(params.get("name")!=adminID) {
+            destoryBtn.style.display="none";
+        }
+        
     } else {
         roomCred.innerHTML = data.error;
     }  
@@ -124,6 +130,11 @@ function getColor(index) {
        
        return color;
 }
+
+destoryBtn.addEventListener("click", ()=>{
+    socket.emit("destroy", roomID);
+    alert("Session ended by room admin!")
+})
 
 // title color and animation
 

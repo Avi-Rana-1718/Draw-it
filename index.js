@@ -6,8 +6,9 @@ const server = http.createServer(app)
 const { Server } = require("socket.io");
 const io = new Server(server);
 const session = require("express-session");
-const { log } = require("console");
+const { log, error } = require("console");
 const { userInfo } = require("os");
+const uuid = require("uuid")
 
 app.use(express.static("./public"));
 app.use(session({
@@ -23,7 +24,7 @@ app.get("/createRoom", (req, res)=>{
     console.log(req.query);
     
     let roomObj = {
-        id: data.length,
+        id: (uuid.v4(Date.now())).substring(0, 6),
         members: [id],
         roomAdmin: id
     }
@@ -74,6 +75,17 @@ io.on("connection", (socket)=>{
     socket.on("draw", (roomID, data)=>{
         io.emit(`draw/${roomID}`, data);
     })
+
+    socket.on("destroy", (roomID)=>{
+        let data = JSON.parse(fs.readFileSync("./data.json"));
+        data = data.filter((el)=>{
+            return el.id != roomID;
+        });
+        fs.writeFileSync("./data.json", JSON.stringify(data));
+        console.log(`Room (${roomID}) destroyed!`);
+        io.emit(`join/${roomID}`, {error: "Room admin ended the session!"})
+
+    });
 })
 
 
