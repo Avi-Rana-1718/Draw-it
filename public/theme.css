@@ -1,0 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&display=swap');
+body {
+    text-align: center;
+    font-family: "Inconsolata", monospace;
+}
+
+nav > h2 {
+    font-family: "Shadows Into Light", cursive;
+    font-size: 5rem;
+    margin: 5px;
+}

@@ -13,6 +13,9 @@ let drawData=[];
 
 canvas.width=500;
 canvas.height=500;
+ctx.rect(0, 0, canvas.width, canvas.height);
+ctx.fillStyle = "white";
+ctx.fill();
 
 socket.emit("join", params.get("id"), params.get("name"));
 socket.emit("init", params.get("id"), params.get("name"));
@@ -35,7 +38,7 @@ socket.on(`join/${params.get("id")}`, (data)=>{
         drawColor=getColor(data.members.indexOf(params.get("name"))+1);
         roomCred.innerHTML=`<span>Room ID: ${data.id}<span><br/>`;
         roomCred.innerHTML+=`<span>Members: ${data.members.length}</span><br/>`;
-        roomCred.innerHTML+=(adminID!=params.get("name"))?`<span>User ID: ${params.get("name")}</span>`:`<span>User ID: ${params.get("name")} (You are the room admin)</span>`
+        roomCred.innerHTML+=(adminID!=params.get("name"))?`<span>User ID: ${params.get("name")}</span>`:`<span>User ID: ${params.get("name")}<br/> (You are the room admin)</span>`
         memberList.innerHTML=null
 
         data.members.forEach((el, index)=>{
@@ -121,3 +124,11 @@ function getColor(index) {
        
        return color;
 }
+
+// title color and animation
+
+// let title = document.querySelector("h2");
+// title.innerHTML = [...title.innerHTML].map((el, index)=>{
+//     return `<span style='color:${getColor(index+1)}'>${el}</span>`
+// })
+// title.innerHTML=title.innerHTML.replaceAll(",", "")

@@ -4,24 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Draw-it!</title>
-    <style>
-        canvas {
-            border: 1px solid black;
-        }
-        .colorCircle {
-            /* width: 1em;
-            height: 1em;
-            padding: 4px; */
-        }
-    </style>
+    <link rel="stylesheet" href="theme.css" />
+    <link rel="stylesheet" href="join.css" />
 </head>
 <body>
-    <h2>Draw-it!</h2>
-    <span id="roomCred">Creds</span>
-    <br />
-    <canvas id="drawCanvas"></canvas>
-    <br />
-    <ul id="memberList"></ul>
+    <nav>
+        <h2>Draw-it!</h2>
+    </nav>
+    <main>   
+        <span id="roomCred">Creds</span>
+        <canvas id="drawCanvas"></canvas>
+        <div>
+            <span><b><u>Members</u></b></span>
+            <ul id="memberList"></ul>
+        </div>
+    </main>
     <script src="/socket.io/socket.io.js"></script>
     <script>
     var socket = io();
