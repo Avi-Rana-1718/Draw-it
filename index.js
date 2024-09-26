@@ -5,36 +5,39 @@ const http = require("http")
 const server = http.createServer(app)
 const { Server } = require("socket.io");
 const io = new Server(server);
-const uuid = require("uuid");
 const session = require("express-session")
 
 app.use(express.static("./public"));
 app.use(session({
-    secret:"secertpass"
+    secret:"secertpass",
+    resave: false,
+    saveUninitialized: true
 }))
 
 app.get("/createRoom", (req, res)=>{
     let data = JSON.parse(fs.readFileSync("./data.json"));
-
+    
+    let id = req.query.name;
+    console.log(req.query);
+    
     let roomObj = {
         id: ++data.roomCount,
-        members: [req.ip],
-        roomAdmin: req.ip,
+        members: [id],
+        roomAdmin: id,
         drawData: []
     }
 
     data.roomData.push(roomObj)
     fs.writeFileSync("./data.json", JSON.stringify(data));
-    roomObj.adminID = req.ip;
+    roomObj.adminID = id;
     res.json(roomObj)
 })
 
-app.get("/joinRoom/:id", (req, res)=>{    
+app.get("/joinRoom/:id/:name", (req, res)=>{    
     let data = JSON.parse(fs.readFileSync("./data.json"));
     // generate userid
-    // if(!req.session.id) {
-    //     req.session.id =req.ip
-    // }
+    let name = req.params.name;
+
     //check if the room exists
 
     let nData = data.roomData.filter((el)=>{
@@ -47,14 +50,14 @@ app.get("/joinRoom/:id", (req, res)=>{
         console.log(nData);
 
        let uData = nData[0].members.filter((el)=>{
-            return el == req.ip;
+            return el == name;
         })
 
         if(uData.length==0) {
             let roomObj = {
                 id: nData[0].id,
-                members: [...nData[0].members, req.ip],
-                userID: req.ip,
+                members: [...nData[0].members, name],
+                userID: name,
                 drawData: nData[0].drawData
             }
     
@@ -75,7 +78,7 @@ app.get("/joinRoom/:id", (req, res)=>{
             res.json({
                 id: nData[0].id,
                 members: [...nData[0].members],
-                userID: req.ip,
+                userID: name,
                 drawData: nData[0].drawData
             })
             
@@ -95,14 +98,13 @@ io.on("connection", (socket)=>{
 
     socket.on("disconnect", ()=>{
         console.log("User disconnected!");
-        
     })
 
-    socket.on("draw", (roomID, userID, pos)=>{
+    socket.on("draw", (roomID, pos)=>{
         let data = JSON.parse(fs.readFileSync("./data.json"));
         data.roomData = data.roomData.map((el)=>{
             if(el.id==roomID) {
-                el.drawData.push({x: pos.x, y: pos.y,color: pos.color, userID: userID})
+                el.drawData.push({x: pos.x, y: pos.y,color: pos.color})
             }
             return el;
         })

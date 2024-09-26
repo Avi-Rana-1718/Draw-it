@@ -6,8 +6,9 @@ let params = new URLSearchParams(window.location.search);
 console.log(params.get("id"));
 
 let userID;
+let drawColor="pink"
 
-fetch("/joinRoom/" + params.get("id")).then(res=>res.json()).then(data=>{
+fetch("/joinRoom/" + params.get("id") + "/" + params.get("name")).then(res=>res.json()).then(data=>{
     console.log(data);
    if(data.error==undefined) { 
     userID=data.userID;
@@ -22,6 +23,7 @@ fetch("/joinRoom/" + params.get("id")).then(res=>res.json()).then(data=>{
    canvas.height=500;
 
    data.drawData.forEach(el=>{
+    ctx.fillStyle=el.color;
     ctx.beginPath();
     ctx.arc(el.x, el.y, 5, 0, Math.PI * 2, true); // Right eye
     ctx.fill();
@@ -30,10 +32,11 @@ fetch("/joinRoom/" + params.get("id")).then(res=>res.json()).then(data=>{
 
 canvas.addEventListener("mousemove", (e)=>{
     if(e.button==0) {
+        ctx.fillStyle=drawColor;
         ctx.beginPath();
         ctx.arc(e.offsetX, e.offsetY, 5, 0, Math.PI * 2, true); // Right eye
         ctx.fill();
 
-        socket.emit("draw", params.get("id"), userID, {x:e.offsetX, y: e.offsetY})
+        socket.emit("draw", params.get("id"), {x:e.offsetX, y: e.offsetY, color: drawColor, userID: userID})
     }
 })
