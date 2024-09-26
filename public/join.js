@@ -29,11 +29,20 @@ socket.on(`draw/${params.get("id")}`, (data)=>{
 socket.on(`join/${params.get("id")}`, (data)=>{
 
     if(data.error==undefined) {
-        adminID=data.adminID;
+        console.log(data);
+        
+        adminID=data.roomAdmin;
         drawColor=getColor(data.members.indexOf(params.get("name"))+1);
         roomCred.innerHTML=`<span>Room ID: ${data.id}<span><br/>`;
         roomCred.innerHTML+=`<span>Members: ${data.members.length}</span><br/>`;
-        roomCred.innerHTML+=`<span>User ID: ${params.get("name")}`
+        roomCred.innerHTML+=(adminID!=params.get("name"))?`<span>User ID: ${params.get("name")}</span>`:`<span>User ID: ${params.get("name")} (You are the room admin)</span>`
+        memberList.innerHTML=null
+
+        data.members.forEach((el, index)=>{
+            let li = document.createElement("li");
+            li.innerHTML = el + ` <span class="colorCircle" style="background-color: ${getColor(index + 1)}">${getColor(index + 1)}</span>`;
+            memberList.appendChild(li)
+        })
     } else {
         roomCred.innerHTML = data.error;
     }  
@@ -55,12 +64,19 @@ socket.on(`completeInit/${roomID}/${params.get("name")}`, (data)=>{
 })
 
 canvas.addEventListener("mousemove", (e)=>{
-        if(e.which==1) {
+        if(e.which==1) {            
             ctx.fillStyle=drawColor;
             ctx.beginPath();
             ctx.arc(e.offsetX, e.offsetY, 5, 0, Math.PI * 2, true);
             ctx.fill();
             socket.emit("draw", params.get("id"), {x:e.offsetX, y: e.offsetY, color: drawColor})
+        } else if (e.which==3) {
+            e.preventDefault();
+            ctx.fillStyle="white";
+            ctx.beginPath();
+            ctx.arc(e.offsetX, e.offsetY, 10, 0, Math.PI * 2, true);
+            ctx.fill();
+            socket.emit("draw", params.get("id"), {x:e.offsetX, y: e.offsetY, color: "white"})
         }
 })
 
