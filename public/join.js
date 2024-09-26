@@ -56,7 +56,7 @@ socket.on(`completeInit/${roomID}/${params.get("name")}`, (data)=>{
 
 canvas.addEventListener("mousemove", (e)=>{
         if(e.which==1) {
-            ctx.fillStyle=data.color;
+            ctx.fillStyle=drawColor;
             ctx.beginPath();
             ctx.arc(e.offsetX, e.offsetY, 5, 0, Math.PI * 2, true);
             ctx.fill();
