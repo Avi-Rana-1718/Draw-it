@@ -1,60 +1,41 @@
 let canvas = document.querySelector("#drawCanvas");
 let ctx = canvas.getContext("2d"); 
 
-let roomCred = document.querySelector("#roomCred")
+let roomCred = document.querySelector("#roomCred");
+let memberList = document.querySelector("#memberList");
+
 let params = new URLSearchParams(window.location.search);
-console.log(params.get("id"));
 
-let userID;
+let roomID;
 let drawColor;
+  
+canvas.width=500;
+canvas.height=500;
 
-fetch("/joinRoom/" + params.get("id") + "/" + params.get("name")).then(res=>res.json()).then(data=>{
-    console.log(data);
-   if(data.error==undefined) { 
-    userID=data.userID;
-    roomCred.innerHTML=`<h5>Room ID: ${data.id} </h5>`;
-    roomCred.innerHTML+=`<span>Member joined: ${data.members.length}</span><br />`;
-    
-    roomCred.innerHTML+=(data.userID!=data.roomAdmin)?`<span>User ID: ${data.userID}</span>`:`<span>User ID: ${data.userID}</span> (You are the room admin!)`;  
-    } else {
-    roomCred.innerHTML=data.error;
-    return;
-   }
+socket.emit("join", params.get("id"), params.get("name"));
 
-   switch(data.members.indexOf(data.userID) + 1) {
-    case 1:
-        drawColor="red";
-        break;
-    case 2:
-        drawColor="orange";
-        break;
-    case 3:
-        drawColor="yellow";
-        break;
-    case 4:
-        drawColor="green";
-        break;
-    case 5:
-        drawColor="blue";
-        break;
-    case 6:
-        drawColor="indigo";
-        break;
-    case 7:
-        drawColor="violet";
-        break;
-   }
-
-   canvas.width=500;
-   canvas.height=500;
-
-   data.drawData.forEach(el=>{
-    ctx.fillStyle=el.color;
+socket.on(`draw/${params.get("id")}`, (data)=>{
+    ctx.fillStyle=data.color;
     ctx.beginPath();
-    ctx.arc(el.x, el.y, 5, 0, Math.PI * 2, true); // Right eye
+    ctx.arc(data.x, data.y, 5, 0, Math.PI * 2, true);
     ctx.fill();
-   })
 })
+
+socket.on(`join/${params.get("id")}`, (data)=>{
+    console.log(data);
+    
+    if(data.error==undefined) {
+        drawColor=getColor(data.members.indexOf(params.get("name"))+1);
+        roomCred.innerHTML=`<span>Room ID: ${data.id}<span><br/>`;
+        roomCred.innerHTML+=`<span>Members: ${data.members.length}</span><br/>`;
+        roomCred.innerHTML+=`<span>User ID: ${params.get("name")}`
+    } else {
+        roomCred.innerHTML = data.error;
+    }
+
+    
+});
+
 
 canvas.addEventListener("mousemove", (e)=>{
     if(e.button==0) {
@@ -62,7 +43,37 @@ canvas.addEventListener("mousemove", (e)=>{
         ctx.beginPath();
         ctx.arc(e.offsetX, e.offsetY, 5, 0, Math.PI * 2, true); // Right eye
         ctx.fill();
-
-        socket.emit("draw", params.get("id"), {x:e.offsetX, y: e.offsetY, color: drawColor, userID: userID})
+        socket.emit("draw", params.get("id"), {x:e.offsetX, y: e.offsetY, color: drawColor})
     }
 })
+
+function getColor(index) {
+    console.log(index);
+    
+    let color;
+    switch(index) {
+        case 1:
+            color="red";
+            break;
+        case 2:
+            color="orange";
+            break;
+        case 3:
+            color="yellow";
+            break;
+        case 4:
+            color="green";
+            break;
+        case 5:
+            color="blue";
+            break;
+        case 6:
+            color="indigo";
+            break;
+        case 7:
+            color="violet";
+            break;
+       }
+       
+       return color;
+}
