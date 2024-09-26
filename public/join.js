@@ -19,7 +19,7 @@ ctx.fillStyle = "white";
 ctx.fill();
 
 socket.emit("join", params.get("id"), params.get("name"));
-socket.emit("init", params.get("id"), params.get("name"));
+// socket.emit("init", params.get("id"), params.get("name"));
 
 socket.on(`draw/${params.get("id")}`, (data)=>{
     drawData.push(data);
@@ -51,9 +51,11 @@ socket.on(`join/${params.get("id")}`, (data)=>{
         if(params.get("name")!=adminID) {
             destoryBtn.style.display="none";
         }
-        
+
     } else {
         roomCred.innerHTML = data.error;
+        memberList.innerHTML="<li>Session ended</li>";
+        memberList.innerHTML+="<li>No members!</li>";
     }  
 });
 
@@ -65,11 +67,7 @@ socket.on(`getData/${params.get("id")}`, ()=>{
 })
 
 socket.on(`completeInit/${roomID}/${params.get("name")}`, (data)=>{
-    console.log(9);
-    
-    console.log(data);
-    
-    
+    console.log(data);  
 })
 
 canvas.addEventListener("mousemove", (e)=>{
@@ -104,7 +102,7 @@ function getColor(index) {
     console.log(index);
     
     let color;
-    switch(index) {
+    switch(index%7) {
         case 1:
             color="red";
             break;
@@ -126,7 +124,11 @@ function getColor(index) {
         case 7:
             color="violet";
             break;
+        default:
+            color="grey";
        }
+       
+       console.log(index%7);
        
        return color;
 }
