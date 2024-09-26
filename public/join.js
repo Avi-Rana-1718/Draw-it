@@ -80,6 +80,17 @@ canvas.addEventListener("mousemove", (e)=>{
         }
 })
 
+canvas.addEventListener("touchmove", (e)=>{
+    console.log(e);
+            
+        ctx.fillStyle=drawColor;
+        ctx.beginPath();
+        ctx.arc(e.changedTouches[0].clientX, e.changedTouches[0].clientY, 5, 0, Math.PI * 2, true);
+        ctx.fill();
+        socket.emit("draw", params.get("id"), {x:e.offsetX, y: e.offsetY, color: drawColor})
+
+})
+
 function getColor(index) {
     console.log(index);
     
