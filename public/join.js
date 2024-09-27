@@ -34,6 +34,7 @@ socket.on(`join/${params.get("id")}`, (data)=>{
 
     if(data.error==undefined) {
         console.log(data);
+         
         
         adminID=data.roomAdmin;
         drawColor=getColor(data.members.indexOf(params.get("name"))+1);
