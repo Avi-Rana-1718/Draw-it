@@ -5,17 +5,9 @@ const http = require("http")
 const server = http.createServer(app)
 const { Server } = require("socket.io");
 const io = new Server(server);
-const session = require("express-session");
-const { log, error } = require("console");
-const { userInfo } = require("os");
 const uuid = require("uuid")
 
 app.use(express.static("./public"));
-app.use(session({
-    secret:"secertpass",
-    resave: false,
-    saveUninitialized: true
-}))
 
 app.get("/createRoom", (req, res)=>{
     let data = JSON.parse(fs.readFileSync("./data.json"));

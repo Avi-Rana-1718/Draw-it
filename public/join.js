@@ -12,8 +12,8 @@ let adminID;
 let drawColor;
 let drawData=[];
 
-canvas.width=window.innerWidth;
-canvas.height=window.innerHeight;
+canvas.width=800;
+canvas.height=500;
 ctx.rect(0, 0, canvas.width, canvas.height);
 ctx.fillStyle = "white";
 ctx.fill();

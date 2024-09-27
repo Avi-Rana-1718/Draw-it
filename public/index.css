@@ -1,6 +1,31 @@
-body {}
+body {
+    margin: 8px;
+
+    padding: 10px;
+}
+div {
+    padding: 10px;
+}
+#createDiv {
+    border-radius: 4px;
+    display: inline-block;
+    padding: 15px;
+    background-color: #ECECEC;
+    margin: 5px;
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+}
+#createDiv > input {
+    display: block;
+    margin: 7px 0px;
+    border-radius: 4px;
+    border: none;
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+    padding: 5px;
+}
 #startRoomBtn {
-    background-color: #38C41C;
+    background-color: #6A6A6A;
     color: #fff;
+    padding: 4px 7px;
+    border-radius: 4px;
     border: none;
 }
