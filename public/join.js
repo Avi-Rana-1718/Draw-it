@@ -12,14 +12,18 @@ let adminID;
 let drawColor;
 let drawData=[];
 
-canvas.width=500;
-canvas.height=500;
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
 ctx.rect(0, 0, canvas.width, canvas.height);
 ctx.fillStyle = "white";
 ctx.fill();
 
-socket.emit("join", params.get("id"), params.get("name"));
-// socket.emit("init", params.get("id"), params.get("name"));
+if(localStorage.getItem("name")==null) {
+    localStorage.setItem("name", prompt("Enter a name", ""));
+}
+
+socket.emit("join", params.get("id"), localStorage.getItem("name"));
+// socket.emit("init", params.get("id"), localStorage.getItem("name"));
 
 socket.on(`draw/${params.get("id")}`, (data)=>{
     drawData.push(data);
@@ -33,23 +37,20 @@ socket.on(`draw/${params.get("id")}`, (data)=>{
 socket.on(`join/${params.get("id")}`, (data)=>{
 
     if(data.error==undefined) {
-        console.log(data);
-         
-        
         adminID=data.roomAdmin;
-        drawColor=getColor(data.members.indexOf(params.get("name"))+1);
+        drawColor=getColor(data.members.indexOf(localStorage.getItem("name"))+1);
         roomCred.innerHTML=`<span>Room ID: ${data.id}<span><br/>`;
         roomCred.innerHTML+=`<span>Members: ${data.members.length}</span><br/>`;
-        roomCred.innerHTML+=(adminID!=params.get("name"))?`<span>User ID: ${params.get("name")}</span>`:`<span>User ID: ${params.get("name")}<br/> (You are the room admin)</span>`
+        roomCred.innerHTML+=(adminID!=localStorage.getItem("name"))?`<span>User ID: ${localStorage.getItem("name")}</span>`:`<span>User ID: ${localStorage.getItem("name")}<br/> (You are the room admin)</span>`
         memberList.innerHTML=null
 
         data.members.forEach((el, index)=>{
             let li = document.createElement("li");
-            li.innerHTML = el + ` <span class="colorCircle" style="background-color: ${getColor(index + 1)}">${getColor(index + 1)}</span>`;
+            li.innerHTML = "#" + (index+1) + " " + el + ` <span class="colorCircle" style="background-color: ${getColor(index + 1)}">${getColor(index + 1)}</span>`;
             memberList.appendChild(li)
         });
 
-        if(params.get("name")!=adminID) {
+        if(localStorage.getItem("name")!=adminID) {
             destoryBtn.style.display="none";
         }
 
@@ -64,10 +65,10 @@ socket.on(`getData/${params.get("id")}`, ()=>{
     console.log("Data request received!");
     //console.log("Draw Data: " + drawData);
     
-    socket.emit(`sendData`, roomID, drawData, params.get("name"))
+    socket.emit(`sendData`, roomID, drawData, localStorage.getItem("name"))
 })
 
-socket.on(`completeInit/${roomID}/${params.get("name")}`, (data)=>{
+socket.on(`completeInit/${roomID}/${localStorage.getItem("name")}`, (data)=>{
     console.log(data);  
 })
 
@@ -82,26 +83,21 @@ canvas.addEventListener("mousemove", (e)=>{
             e.preventDefault();
             ctx.fillStyle="white";
             ctx.beginPath();
-            ctx.arc(e.offsetX, e.offsetY, 10, 0, Math.PI * 2, true);
+            ctx.arc(e.offsetX, e.offsetY, 100, 0, Math.PI * 2, true);
             ctx.fill();
             socket.emit("draw", params.get("id"), {x:e.offsetX, y: e.offsetY, color: "white"})
         }
 })
 
 canvas.addEventListener("touchmove", (e)=>{
-    console.log(e);
-            
         ctx.fillStyle=drawColor;
         ctx.beginPath();
         ctx.arc(e.changedTouches[0].clientX, e.changedTouches[0].clientY, 5, 0, Math.PI * 2, true);
         ctx.fill();
         socket.emit("draw", params.get("id"), {x:e.changedTouches[0].clientX, y: e.changedTouches[0].clientY, color: drawColor})
-
-})
+});
 
 function getColor(index) {
-    console.log(index);
-    
     let color;
     switch(index%7) {
         case 1:
@@ -128,21 +124,11 @@ function getColor(index) {
         default:
             color="grey";
        }
-       
-       console.log(index%7);
-       
+
        return color;
 }
 
 destoryBtn.addEventListener("click", ()=>{
     socket.emit("destroy", roomID);
     alert("Session ended by room admin!")
-})
-
-// title color and animation
-
-// let title = document.querySelector("h2");
-// title.innerHTML = [...title.innerHTML].map((el, index)=>{
-//     return `<span style='color:${getColor(index+1)}'>${el}</span>`
-// })
-// title.innerHTML=title.innerHTML.replaceAll(",", "")
+});

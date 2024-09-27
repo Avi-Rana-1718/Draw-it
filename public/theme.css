@@ -1,11 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Shadows+Into+Light&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Inconsolata:wght@200..900&display=swap');
+html {
+    overscroll-behavior: none;
+}
 body {
     text-align: center;
     font-family: "Inconsolata", monospace;
+    /* background-color: #7278e9; */
+    color: #282828;
+    margin: 0;
+    overflow: hidden;
 }
 
 nav > h2 {
+    z-index: 10;
     font-family: "Shadows Into Light", cursive;
     font-size: 5rem;
     margin: 5px;

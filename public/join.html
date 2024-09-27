@@ -11,18 +11,20 @@
     <nav>
         <h2>Draw-it!</h2>
     </nav>
-    <main>   
-        <span id="roomCred">Creds</span>
-        <div id="canvasArea">
-            <canvas id="drawCanvas"></canvas>
+    <main>
+        <aside class="left">
+            <span id="roomCred">Creds</span>
             <section>
                 <button id="destroyBtn">End session</button>
             </section>
+        </aside>
+        <div id="canvasArea">
+            <canvas id="drawCanvas" width="100vw" height="100vh"></canvas>
         </div>
-        <div>
-            <span><b><u>Members</u></b></span>
+        <aside class="right">
+            <span><i class="fa-solid fa-pen"></i><b><u>Members</u></b></span>
             <ul id="memberList"></ul>
-        </div>
+        </aside>
     </main>
     <script src="/socket.io/socket.io.js"></script>
     <script>

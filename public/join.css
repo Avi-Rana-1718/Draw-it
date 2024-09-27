@@ -1,5 +1,6 @@
 canvas {
-    border: 1px solid black;
+    border: 0.5px solid rgb(62, 69, 79);
+    border-radius: 5px;
 }
 main {
     display: flex;
@@ -13,20 +14,52 @@ main ul {
     padding: 0;
     text-align: left;
 }
+nav {
+    position: absolute;
+    left:45lvw;
+    z-index: 10;
+    user-select: none;
+}
 #roomCred {
     text-align: left;
 }
 #canvasArea {
     display: flex;
     flex-direction: column;
-    margin: 4px 10px;
+}
+
+aside{
+    z-index: 10;
+    position: absolute;
+    background-color: #ECECEC;
+    padding: 7px;
+    top:100px;
+    border-radius: 5px;
+    border: 0.5px solid rgb(62, 69, 79);
+    user-select: none;
+}
+
+aside > section {
+    margin-top: 4px;
+}
+
+aside.left {
+    left: 10px;
+}
+
+aside.right {
+    right: 10px;
 }
 
 @media screen and (max-width:800px) {
     main {
         display: block;
     }
-    #canvasArea {
-        margin: 4px 0px;
+
+    nav {
+        left: 25%;
     }
+    /* aside {
+        bottom: 10px;
+    } */
 }
