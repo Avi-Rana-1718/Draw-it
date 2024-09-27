@@ -94,7 +94,7 @@ canvas.addEventListener("touchmove", (e)=>{
         ctx.beginPath();
         ctx.arc(e.changedTouches[0].clientX, e.changedTouches[0].clientY, 5, 0, Math.PI * 2, true);
         ctx.fill();
-        socket.emit("draw", params.get("id"), {x:e.offsetX, y: e.offsetY, color: drawColor})
+        socket.emit("draw", params.get("id"), {x:e.changedTouches[0].clientX, y: changedTouches[0].clientY, color: drawColor})
 
 })
 
