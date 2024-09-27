@@ -1,5 +1,5 @@
 canvas {
-    border: 0.5px solid rgb(62, 69, 79);
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
     border-radius: 5px;
     margin: 0px 8px;
 }
@@ -44,7 +44,12 @@ aside > section {
     main {
         display: block;
     }
-
+    canvas {
+        margin: 0;
+    }
+    #canvasArea {
+        margin: 10px 0px;
+    }
     nav {
         left: 25%;
     }
